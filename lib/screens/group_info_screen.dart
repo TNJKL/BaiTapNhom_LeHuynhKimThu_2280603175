@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'member_profile_screen.dart';
 
 class GroupInfoScreen extends StatelessWidget {
   const GroupInfoScreen({super.key});
@@ -32,29 +33,30 @@ class GroupInfoScreen extends StatelessWidget {
 
   Widget _buildAvatar(String? avatarPath, String name, BuildContext context) {
     if (avatarPath != null) {
-      // Nếu có ảnh local, dùng AssetImage
-      return CircleAvatar(
-        radius: 30,
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        backgroundImage: AssetImage(avatarPath),
-        onBackgroundImageError: (exception, stackTrace) {
-          // Nếu lỗi load ảnh, dùng fallback với chữ cái đầu
-        },
-        child: avatarPath.contains('rabbit') 
-          ? null 
-          : Builder(
-              builder: (context) {
-                final initials = name.split(' ').map((n) => n.isNotEmpty ? n[0] : '').take(2).join();
-                return Text(
-                  initials.toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                );
-              },
-            ),
+      // Nếu có ảnh local, dùng Image.asset với errorBuilder
+      return ClipOval(
+        child: Image.asset(
+          avatarPath,
+          width: 60,
+          height: 60,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            // Fallback nếu không load được ảnh
+            final initials = name.split(' ').map((n) => n.isNotEmpty ? n[0] : '').take(2).join();
+            return CircleAvatar(
+              radius: 30,
+              backgroundColor: _getColorForName(name),
+              child: Text(
+                initials.toUpperCase(),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            );
+          },
+        ),
       );
     } else {
       // Nếu không có ảnh, dùng CircleAvatar với chữ cái đầu
@@ -170,6 +172,14 @@ class GroupInfoScreen extends StatelessWidget {
                       ],
                     ),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MemberProfileScreen(member: member),
+                        ),
+                      );
+                    },
                   ),
                 );
               },

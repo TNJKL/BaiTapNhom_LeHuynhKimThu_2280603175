@@ -10,3 +10,5 @@
 - Kích thước khuyến nghị: 200x200 pixels hoặc lớn hơn
 - Tên file phải chính xác: `kimthu_rabbit.png`
 
+
+
